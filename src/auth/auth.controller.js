@@ -3,8 +3,9 @@ const config = require("../config/auth.config");
 const User = db.user;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
-exports.signup = (req, res) => {
+const { Op } = require("sequelize");
+const {getOneUser} = require('../user/user.service');
+exports.register = (req, res) => {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -20,42 +21,42 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
-  User.findOne({
-    where: {
-      username: req.body.username
+exports.login = async (req, res) => {
+  try{
+    const {username, email, password} = req.body;
+    const user = await getOneUser({username, email});
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
     }
-  })
-    .then(user => {
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
-
-      const passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
-      }
-
-      const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
+    const passwordIsValid = bcrypt.compareSync(
+      password,
+      user.password
+    );
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid Password!"
       });
+    }
 
-      res.status(200).send({
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        status:user.status,
-        accessToken: token
-      })
+    const token = jwt.sign({ id: user.id }, config.secret, {
+      expiresIn: 86400 // 24 hours
+    });
+
+    res.status(200).send({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      status: user.status,
+      accessToken: token
     })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
-    })
+  // })
+    // .catch(err => {
+    //   res.status(500).send({ message: err.message });
+    // })
+  }catch(err) {
+    throw err;
+  }
+    
 }

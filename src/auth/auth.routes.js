@@ -3,9 +3,9 @@ const controller = require("./auth.controller");
 const express = require("express");
 const router = express.Router();
 router
-  .post('/signup',
+  .post('/register',
    verifySignUp.checkDuplicateUsernameOrEmail,
-   controller.signup)
-  .post("/signin", controller.signin);
+   controller.register)
+  .post("/login", controller.login);
 
 module.exports = router;
