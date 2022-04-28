@@ -1,21 +1,25 @@
-
 module.exports = (sequelize, Sequelize) => {
-    const Album = sequelize.define("albums", {
-        id: {
-            type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
-            primaryKey: true,
-        },
-        name: {
-            type: Sequelize.STRING
-        },
-        description: {
-            type: Sequelize.STRING
-        },
-        status: {
-            type: Sequelize.ENUM("pending", "active"),
-            defaultValue: "active",
-        }
-    });
-    return Album;
+  const Album = sequelize.define("album", {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      primaryKey: true,
+      allowNull: false
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    current_status:{
+      type: Sequelize.ENUM,
+      values: ['Public', 'Private'],
+      allowNull: true,
+      defaultValue: 'Public'
+    }
+  })
+  return Album;
 };

@@ -1,9 +1,10 @@
+const config = require('./config')
 module.exports = {
-  HOST: "localhost",
-  USER: "postgres",
-  PASSWORD: "123123",
-  DB: "VMO_project",
-  dialect: "postgres",
+  HOST: config.host,
+  USER: config.userDB,
+  PASSWORD: config.passwordDB,
+  DB: config.nameDB,
+  dialect: config.dialectDB,
   pool: {
     max: 5,
     min: 0,

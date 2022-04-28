@@ -19,7 +19,7 @@ db.sequelize.sync({force: true}).then(() => {
 
 // routes
 app.use('/auth', require('./auth/auth.routes'));
-
+// app.use('/album', require('./album/album.routes'));
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
