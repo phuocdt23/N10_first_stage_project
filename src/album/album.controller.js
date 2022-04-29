@@ -1,19 +1,18 @@
-// const { StatusCodes } = require('http-status-codes')
-// const { create, getOne, getAll, updateOne, deleteOne } = require('./album.service')
+const { StatusCodes } = require('http-status-codes');
+const { create,addAlbum, getOne, getAll, updateOne, deleteOne, addAlbumByUserId } = require('./album.service');
+
 // // const { createUserAlbum } = require('../useralbum/useralbum.model')
 
-// const createAlbum = async (req, res, next) => {
-//   try {
-//     const { name, description } = req.body
-//     const { _id: userId } = req.user
-
-//     const album = await create(name, description)
-//     const useralbum = createUserAlbum(userId, album.id)
-
-//   } catch (error) {
-//     next(error)
-//   }
-// }
+const createAlbum = async (req, res, next) => {
+  try {
+    const { name, description } = req.body;
+    const album = await create(name, description);
+    await addAlbumByUserId(req.userId, album.dataValues.id);
+    res.status(StatusCodes.OK).json({message:`successful to add ${album.dataValues.name} into album's user (Id: ${req.userId})`});
+  } catch (error) {
+    next(error)
+  }
+}
 
 // const getAlbum = async (req, res, next) => {
 //   try {
@@ -70,10 +69,10 @@
 //   }
 // }
 
-// module.exports = {
-//   createAlbum,
+module.exports = {
+  createAlbum,
 //   getAlbum,
 //   updateAlbum,
 //   getAllAlbumOfAnUser,
 //   deleteAlbum,
-// }
+}

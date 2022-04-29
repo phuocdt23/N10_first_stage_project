@@ -1,4 +1,4 @@
-const db = require('../models/index.model');
+const db = require('../config/db.connection.js');
 const User = db.user;
 const getOneUser = async (filter) => {
     const { email, username } = filter;
@@ -15,10 +15,16 @@ const getOneUser = async (filter) => {
     }
 }
 
-const updateUser = async (email, username, name, id) => {
-    const user = await User.update({ where: { id } }, { email, username, name });
-    user.status = 'unconfirmed';
-    return user
+const updateUser = async (params, id) => {
+    await User.update({ where: { id } }, { ...params });
+    await User.update(
+        {
+          status: "unconfirmed",
+        },
+        {
+          where: { id: id },
+        }
+      );
 }
 
 module.exports = { getOneUser, updateUser };

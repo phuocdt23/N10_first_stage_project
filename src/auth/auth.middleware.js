@@ -1,36 +1,43 @@
 const jwt = require("jsonwebtoken");
-const {StatusCodes} = require("http-status-codes");
+const { StatusCodes } = require("http-status-codes");
 const config = require("../config/config.js");
-const db = require("../models/index.model");
+const db = require("../config/db.connection");
 const User = db.user;
 exports.checkDuplicateUsernameOrEmail = (req, res, next) => {
-  // Username
-  User.findOne({
-    where: {
-      username: req.body.username
+  try {
+    if(!req.body.username || !req.body.email){
+      return res.status(StatusCodes.BAD_REQUEST).json({message: ""})
     }
-  }).then(user => {
-    if (user) {
-      res.status(StatusCodes.CONFLICT).send({
-        message: "Failed! Username is already in use!"
-      });
-      return;
-    }
-    // Email
+    // Username
     User.findOne({
       where: {
-        email: req.body.email
+        username: req.body.username
       }
     }).then(user => {
       if (user) {
         res.status(StatusCodes.CONFLICT).send({
-          message: "Failed! Email is already in use!"
+          message: "Failed! Username is already in use!"
         });
         return;
       }
-      next();
+      // Email
+      User.findOne({
+        where: {
+          email: req.body.email
+        }
+      }).then(user => {
+        if (user) {
+          res.status(StatusCodes.CONFLICT).send({
+            message: "Failed! Email is already in use!"
+          });
+          return;
+        }
+        next();
+      });
     });
-  });
+  } catch (err) {
+    next(err);
+  }
 };
 exports.authJwt = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -47,7 +54,7 @@ exports.authJwt = (req, res, next) => {
         message: "Unauthorized!"
       });
     }
-    req.userId = decoded.id;
+    req.userId = decoded.id
     next();
   });
 };

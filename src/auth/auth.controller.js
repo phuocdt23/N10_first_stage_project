@@ -1,4 +1,4 @@
-const db = require("../models/index.model");
+const db = require("../config/db.connection");
 const { StatusCodes } = require('http-status-codes');
 const config = require("../config/config.js");
 const User = db.user;
@@ -24,7 +24,7 @@ exports.register = async (req, res, next) => {
         const url = `http://localhost:${config.port}/auth/confirmation/${token}`;
         transporter.sendMail(
           {
-            from: "phuoc.dt182724@outlook.com",
+            from: config.email,
             to: user.email,
             subject: `Confirm Email`,
             html: `Please check this email to confirm your email <a href="${url}">${url}</a>`,
@@ -36,11 +36,11 @@ exports.register = async (req, res, next) => {
               res.json(info);
             }
           })
-        res.status(201).send({ message: "User registered successfully But you need to check your email to confirm!" });
+        res.status(StatusCodes.CREATED).send({ message: "User registered successfully But you need to check your email to confirm!" });
 
       })
       .catch(err => {
-        res.status(500).send({ message: err.message });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: err.message });
       });
   } catch (err) {
     next(err);
@@ -98,7 +98,7 @@ exports.confirmationEmail = async (req, res, next) => {
         where: { id: id },
       }
     );
-    res.json({ message: "confirmation successfully!!!!!" })
+    res.status(StatusCodes.OK).json({ message: "confirmation successfully!!!!!" })
   } catch (err) {
     next(err);
   }
@@ -106,9 +106,9 @@ exports.confirmationEmail = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { email, username, name } = req.body;
-    const user = await getOneUser({ email, username });
-    if (!user) {
-      const result = await updateUser(email, username, name, req.userId);
+    const user = User.findByPk(req.userId);
+    if (user) {
+      const result = await updateUser({email, username, name}, req.userId);
       console.log(result);
     } else {
       res.status(StatusCodes.CONFLICT).json({ message: "username or email already in use!!!!!" })
@@ -123,19 +123,21 @@ exports.changePassword = async (req, res, next) => {
     const { username, email, password, newPassword } = req.body;
     const user = await getOneUser({ username, email });
     if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).send({ message: "User Not found." });
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "User Not found." });
     };
     const passwordIsValid = bcrypt.compareSync(
       password,
       user.password
     );
     if (!passwordIsValid) {
-      return res.status(StatusCodes.NOT_ACCEPTABLE).send({
+      return res.status(StatusCodes.NOT_ACCEPTABLE).json({
         accessToken: null,
         message: "Invalid Password!"
       });
     }
-    user.password = bcrypt.hashSync(newPassword, 8);
+    const rs = await user.update({ password: bcrypt.hashSync(newPassword, 8) });
+    console.log("-------------------------------------");
+    console.log(rs);
     res.status(StatusCodes.OK).json({ message: 'successfully change password!' });
   } catch (err) {
     next(err);
@@ -147,16 +149,14 @@ exports.resetPassword = async (req, res, next) => {
     const token = req.params.token;
     const { id } = jwt.verify(token, config.emailSecretKey);
     const user = await User.findByPk(id);
-    if (!user) return res.status(StatusCodes.BAD_REQUEST).json({message: "invalid link or expired"});
-    await User.update(
-      {
-        password: req.body.newPassword,
-      },
-      {
-        where: { id: id },
-      }
-    );
-    res.json({ message: "change password successfully!!!!!" })
+    if (!user) return res.status(StatusCodes.BAD_REQUEST).json({ message: "invalid link or expired" });
+    try {
+      await user.update({ password: bcrypt.hashSync(req.body.newPassword, 8) });
+      res.json({ message: "change password successfully!!!!!" });
+    }
+    catch (err) {
+      throw err;
+    }
   }
   catch (err) {
     next(err);
@@ -165,11 +165,10 @@ exports.resetPassword = async (req, res, next) => {
 
 exports.forgotPassword = async (req, res, next) => {
   try {
-    const user = await User.findOne( {email: req.email })
+    const user = await User.findOne({ email: req.email })
     if (!user) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: "email does not exist!" });
     } else {
-
       //sending email to confirm register
       const token = jwt.sign({ id: user.id }, config.emailSecretKey, {
         expiresIn: 86400 // 24 hours

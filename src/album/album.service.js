@@ -1,18 +1,26 @@
-// const Album = require('./album.model')
-// const { StatusCodes } = require('http-status-codes')
+const db = require('../config/db.connection');
+const Album = db.album;
+const User = db.user;
+const { StatusCodes } = require('http-status-codes')
 // const {
 //   getAllUserAlbum,
 //   getOneUserAlbum
 // } = require('../useralbum/useralbum.service')
-
-// const create = async (name, description) => {
-//   const album = await Album.create({ name, description })
-// }
-
+const addAlbumByUserId = async (userId, albumId) =>{
+  const user = await User.findByPk(userId);
+  const album = await Album.findByPk(albumId);
+  const rs = user.addAlbum(album);
+  return rs;
+}
+const create = async (name, description) => {
+  const album = await Album.create({ name, description })
+  console.log(album);
+  return album;
+}
 // const getOne = async (id) => {
 //   const album = await Album.findOne({ where: id })
 //   if (!album) {
-//     throw new APIError(StatusCodes.BAD_REQUEST, 'Invalid album')
+//     return res.status(StatusCodes.BAD_REQUEST).json('Invalid album');
 //   }
 
 //   const userAlbum = await getOneUserAlbum(albumid)
@@ -40,10 +48,11 @@
 //   return album
 // }
 
-// module.exports = {
-//   create,
-//   getOne,
-//   getAll,
-//   updateOne,
-//   deleteOne
-// }
+module.exports = {
+  create,
+  addAlbumByUserId,
+  //   getOne,
+  //   getAll,
+  //   updateOne,
+  //   deleteOne
+}
