@@ -1,7 +1,14 @@
 const { StatusCodes } = require('http-status-codes');
-const { create,addAlbum, getOne, getAll, updateOne, deleteOne, addAlbumByUserId } = require('./album.service');
-
-// // const { createUserAlbum } = require('../useralbum/useralbum.model')
+const { 
+  create,
+  addAlbumByUserId,
+  getAllAlbumUser,
+  addAlbum, 
+  getOne, 
+  getAll, 
+  updateOne, 
+  deleteOne
+} = require('./album.service');
 
 const createAlbum = async (req, res, next) => {
   try {
@@ -14,6 +21,16 @@ const createAlbum = async (req, res, next) => {
   }
 }
 
+const getAllAlbumOfAnUser = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const rs = await getAllAlbumUser(userId); // return be like [{a}, {b}, {c}]
+    if(!rs) return res.status(StatusCodes.NOT_FOUND).json({message: "Not found any album. Maybe create some?"})
+    return res.status(StatusCodes.OK).json(rs);
+  } catch (error) {
+    next(error)
+  }
+}
 // const getAlbum = async (req, res, next) => {
 //   try {
 //     const { id } = req.params
@@ -33,21 +50,6 @@ const createAlbum = async (req, res, next) => {
 //   }
 // }
 
-// const getAllAlbumOfAnUser = async (req, res, next) => {
-//   try {
-//     const { page, ...filter } = req.query
-//     const query = {
-//       page: page || pagination.page,
-//       records: pagination.records,
-//       filter
-//     }
-
-//     const rs = await getAll(query)
-
-//   } catch (error) {
-//     next(error)
-//   }
-// }
 // const inviteContribute = async (req, res, next) => {
 //   try {
 //     const { userId } = req.body
@@ -71,8 +73,8 @@ const createAlbum = async (req, res, next) => {
 
 module.exports = {
   createAlbum,
+  getAllAlbumOfAnUser,
 //   getAlbum,
 //   updateAlbum,
-//   getAllAlbumOfAnUser,
 //   deleteAlbum,
 }

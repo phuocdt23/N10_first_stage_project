@@ -13,7 +13,7 @@ const router = express.Router()
 router 
   .route('/')
     .post(middleware.authJwt, createAlbum)
-    // .get(middleware.authJwt, getAllAlbumOfAnUser)
+    .get(middleware.authJwt, getAllAlbumOfAnUser)
 
 // router.route('/:id')
 //   .get(middleware.authJwt, getAlbum)

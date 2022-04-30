@@ -16,11 +16,11 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 // database
 const db = require("./config/db.connection");
-db.sequelize.sync();
+// db.sequelize.sync();
 // force: true will drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-// });
+db.sequelize.sync().then(() => {
+  console.log('Drop and Resync Database with { force: true }');
+});
 
 
 // routes
