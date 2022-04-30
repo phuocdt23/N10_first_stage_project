@@ -2,7 +2,7 @@ const { StatusCodes } = require('http-status-codes');
 const { 
   create,
   addAlbumByUserId,
-  getAllAlbumUser,
+  getAllAlbumUserByUserId,
   addAlbum, 
   getOne, 
   getAll, 
@@ -24,21 +24,30 @@ const createAlbum = async (req, res, next) => {
 const getAllAlbumOfAnUser = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const rs = await getAllAlbumUser(userId); // return be like [{a}, {b}, {c}]
+    const rs = await getAllAlbumUserByUserId(userId); // return be like [{a}, {b}, {c}]
     if(!rs) return res.status(StatusCodes.NOT_FOUND).json({message: "Not found any album. Maybe create some?"})
     return res.status(StatusCodes.OK).json(rs);
   } catch (error) {
     next(error)
   }
 }
-// const getAlbum = async (req, res, next) => {
-//   try {
-//     const { id } = req.params
-//     const rs = await getOne({ id })
-//   } catch (error) {
-//     next(error)
-//   }
-// }
+const getAlbumById = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const albumId = req.params.id;
+    // solution 1: handling array
+    const allAlbum = await getAllAlbumUserByUserId(userId);
+    for(const album of allAlbum){
+      if(album.id === albumId){
+        return res.status(StatusCodes.OK).json({album:album});
+      }
+    }
+    return res.status(StatusCodes.NOT_FOUND).json({message: "Not found that album"})
+    // solution 2: query using sequelize
+  } catch (error) {
+    next(error)
+  }
+}
 
 // const updateAlbum = async (req, res, next) => {
 //   try {
@@ -74,7 +83,7 @@ const getAllAlbumOfAnUser = async (req, res, next) => {
 module.exports = {
   createAlbum,
   getAllAlbumOfAnUser,
-//   getAlbum,
+  getAlbumById,
 //   updateAlbum,
 //   deleteAlbum,
 }

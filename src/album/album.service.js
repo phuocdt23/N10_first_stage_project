@@ -14,7 +14,7 @@ const create = async (name, description) => {
   console.log(album);
   return album;
 }
-const getAllAlbumUser = async (userId) => {
+const getAllAlbumUserByUserId = async (userId) => {
   const albumOfAnUser = await User.findByPk(userId, {
     // attributes: {exclude: ['password']},
     include: [
@@ -64,7 +64,7 @@ const getAll = async (userId) => {
 module.exports = {
   create,
   addAlbumByUserId,
-  getAllAlbumUser
+  getAllAlbumUserByUserId
   //   getOne,
   //   getAll,
   //   updateOne,

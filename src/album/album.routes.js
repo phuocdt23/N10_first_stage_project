@@ -3,7 +3,7 @@ const express = require('express')
 const middleware = require("../auth/auth.middleware");
 const {
   createAlbum,
-  getAlbum,
+  getAlbumById,
 //   updateAlbum,
   getAllAlbumOfAnUser,
 //   deleteAlbum,
@@ -15,9 +15,8 @@ router
     .post(middleware.authJwt, createAlbum)
     .get(middleware.authJwt, getAllAlbumOfAnUser)
 
-// router.route('/:id')
-//   .get(middleware.authJwt, getAlbum)
-//   .get(middleware.authJwt, getAllAlbumOfAnUser)
+router.route('/:id')
+  .get(middleware.authJwt, getAlbumById)
 //   .patch(middleware.authJwt, updateAlbum)
 //   .delete(middleware.authJwt, deleteAlbum)
 
