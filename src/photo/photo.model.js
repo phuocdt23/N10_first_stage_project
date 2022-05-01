@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         status: {
-            type: Sequelize.ENUM("a","b","c"),
+            type: Sequelize.ENUM("a","b"),
             defaultValue: "a",
         }
     });

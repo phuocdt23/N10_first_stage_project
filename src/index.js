@@ -26,7 +26,7 @@ db.sequelize.sync().then(() => {
 // routes
 app.use('/auth', require('./auth/auth.routes'));
 app.use('/album', require('./album/album.routes'));
-
+app.use('/photo', require('./photo/photo.routes'));
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

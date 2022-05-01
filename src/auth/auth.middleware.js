@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
 const { StatusCodes } = require("http-status-codes");
 const config = require("../config/config.js");
 const db = require("../config/db.connection");
 const User = db.user;
-exports.checkDuplicateUsernameOrEmail = (req, res, next) => {
+const checkDuplicateUsernameOrEmail = (req, res, next) => {
   try {
     if(!req.body.username || !req.body.email){
       return res.status(StatusCodes.BAD_REQUEST).json({message: ""})
@@ -39,7 +40,7 @@ exports.checkDuplicateUsernameOrEmail = (req, res, next) => {
     next(err);
   }
 };
-exports.authJwt = (req, res, next) => {
+const authJwt = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
   if (!token) {
@@ -58,3 +59,18 @@ exports.authJwt = (req, res, next) => {
     next();
   });
 };
+const diskStorage = multer.diskStorage({
+  destination: function(req, file, cb){
+    cb(null, 'images');
+  } ,
+  filename: function(req, file, cb){
+    cb(null, Date.now() + file.originalname);
+  }
+})
+const upload = multer({ storage: diskStorage })
+const uploadSingle = upload.single('image')
+module.exports = {
+  uploadSingle,
+  checkDuplicateUsernameOrEmail,
+  authJwt
+}
