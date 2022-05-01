@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    current_status:{
+    status:{
       type: Sequelize.ENUM,
       values: ['Public', 'Private'],
       allowNull: true,

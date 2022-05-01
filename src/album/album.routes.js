@@ -4,9 +4,9 @@ const middleware = require("../auth/auth.middleware");
 const {
   createAlbum,
   getAlbumById,
-//   updateAlbum,
   getAllAlbumOfAnUser,
-//   deleteAlbum,
+  updateAlbum,
+  deleteAlbum,
 } = require('./album.controller')
 const router = express.Router()
 
@@ -17,7 +17,7 @@ router
 
 router.route('/:id')
   .get(middleware.authJwt, getAlbumById)
-//   .patch(middleware.authJwt, updateAlbum)
-//   .delete(middleware.authJwt, deleteAlbum)
+  .patch(middleware.authJwt, updateAlbum)
+  .delete(middleware.authJwt, deleteAlbum)
 
 module.exports = router

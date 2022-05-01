@@ -30,43 +30,27 @@ const getAllAlbumUserByUserId = async (userId) => {
   })
   return albumOfAnUser.albums;
 }
-// const getOne = async (id) => {
-//   const album = await Album.findOne({ where: id })
-//   if (!album) {
-//     return res.status(StatusCodes.BAD_REQUEST).json('Invalid album');
-//   }
 
-//   const userAlbum = await getOneUserAlbum(albumid)
-
-//   const role = userAlbum.role
-//   if (!role.include('owner') || !role.include('contribute')) {
-//     throw new APIError(StatusCodes.BAD_REQUEST, 'Do not have permission open album')
-//   }
-
-//   return album
-// }
-
-const getAll = async (userId) => {
-  const album = await Album.findAll()
+const updateOne = async (id, name, description) => {
+  const album = await Album.findByPk(id);
+  if (!album) return res.status(StatusCodes.NOT_FOUND).json({ message: "invalid id album" });
+  else {
+    album.name = name;
+    album.description = description;
+    album.save();
+  }
   return album
 }
 
-// const updateOne = async (id, name, description, status) => {
-//   const album = await Album.update({ where: { id } }, { name, description, status })
-//   return album
-// }
-
-// const deleteOne = async (id) => {
-//   const album = await Album.destroy({ where: id })
-//   return album
-// }
+const deleteOne = async (id) => {
+  const album = await Album.destroy({ where: id })
+  return album
+}
 
 module.exports = {
   create,
   addAlbumByUserId,
-  getAllAlbumUserByUserId
-  //   getOne,
-  //   getAll,
-  //   updateOne,
-  //   deleteOne
+  getAllAlbumUserByUserId,
+  updateOne,
+  deleteOne
 }

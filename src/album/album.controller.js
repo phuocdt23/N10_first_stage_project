@@ -3,9 +3,6 @@ const {
   create,
   addAlbumByUserId,
   getAllAlbumUserByUserId,
-  addAlbum, 
-  getOne, 
-  getAll, 
   updateOne, 
   deleteOne
 } = require('./album.service');
@@ -49,41 +46,38 @@ const getAlbumById = async (req, res, next) => {
   }
 }
 
-// const updateAlbum = async (req, res, next) => {
-//   try {
-//     const { id } = req.params
-//     const { name, description, status } = req.body
-//     const rs = await updateOne(id, name, description, status)
-//   } catch (error) {
-//     next(error)
-//   }
-// }
+const updateAlbum = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { name, description } = req.body
+    const rs = await updateOne(id, name, description);
+    if(!rs) return res.status(StatusCodes.BAD_REQUEST).json({message: "BAD REQUEST"});
+    else{
+      return res.status(StatusCodes.OK).json({rs});
+    }
+  } catch (error) {
+    next(error)
+  }
+}
 
-// const inviteContribute = async (req, res, next) => {
-//   try {
-//     const { userId } = req.body
-//     const { id } = req.params
-//     const role = 'contribute'
-//     const rs = createUserAlbum(userId, id, role)
-
-//   } catch (error) {
-//     next(error)
-//   }
-// }
-
-// const deleteAlbum = async (req, res, next) => {
-//   try {
-//     const { id } = req.params
-//     const rs = await deleteOne({ id })
-//   } catch (error) {
-//     next(error)
-//   }
-// }
+const deleteAlbum = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const rs = await deleteOne({ id })
+    if(!rs){
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid Id's Album"});
+    }else{
+      return res.status(StatusCodes.OK).json({ message: "Success Delete Album!"});
+    }
+  } catch (error) {
+    next(error)
+  }
+}
 
 module.exports = {
   createAlbum,
   getAllAlbumOfAnUser,
   getAlbumById,
-//   updateAlbum,
-//   deleteAlbum,
+  updateAlbum,
+  deleteAlbum,
 }
