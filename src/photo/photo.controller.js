@@ -1,8 +1,8 @@
 const {
     createOne,
     getOne,
-    // updateOne,
-    // deleteOne,
+    updateOne,
+    deleteOne,
 } = require('./photo.service')
 const {StatusCodes} = require('http-status-codes');
 const uploadAnPhoto = async (req, res, next) => {
@@ -31,14 +31,25 @@ const getAnPhoto = async (req, res, next) => {
 }
 const updatePhoto = async (req, res, next) => {
     try{
-
+        const rs = await updateOne(req.params.id, req.body.name);
+        console.log(rs);
+        if(rs){
+            return res.status(StatusCodes.OK).json({result: rs});
+        }else{
+            res.status(StatusCodes.BAD_REQUEST).json({message:"Something went wrong!"})
+        }
     }catch(err){
         next(err);
     }
 }
 const deletePhoto = async (req, res, next) => {
     try{
-
+        const rs = await deleteOne(req.params.id);
+        if(rs){
+            return res.status(StatusCodes.OK).json({result: rs});
+        }else{
+            res.status(StatusCodes.BAD_REQUEST).json({message:"Something went wrong!"})
+        }
     }catch(err){
         next(err);
     }
