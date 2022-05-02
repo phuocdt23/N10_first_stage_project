@@ -3,6 +3,8 @@ const {
     getOne,
     updateOne,
     deleteOne,
+    getAllByUserId,
+    deleteAllPhotoById,
 } = require('./photo.service')
 const {StatusCodes} = require('http-status-codes');
 const uploadAnPhoto = async (req, res, next) => {
@@ -56,7 +58,16 @@ const deletePhoto = async (req, res, next) => {
 }
 const getAllPhotoOfUser = async (req, res, next) => {
     try{
-
+        const photoOfAnUser = await getAllByUserId(req.userId);
+          return res.status(StatusCodes.OK).json({photoOfAnUser});
+    }catch(err){
+        next(err);
+    }
+}
+const deleteAllPhotoOfUser = async (req, res, next) => {
+    try{
+        const result = await deleteAllPhotoById(req.userId);
+          return res.status(StatusCodes.OK).json({result});
     }catch(err){
         next(err);
     }
@@ -85,5 +96,6 @@ module.exports = {
     deletePhoto,
     getAllPhotoOfUser,
     deleteAllPhotoOfAlbum,
-    getAllPhotoOfAlbum
+    getAllPhotoOfAlbum,
+    deleteAllPhotoOfUser
 }

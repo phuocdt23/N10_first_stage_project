@@ -8,19 +8,23 @@ const {
     deletePhoto,
     getAllPhotoOfUser,
     deleteAllPhotoOfAlbum,
-    getAllPhotoOfAlbum
+    getAllPhotoOfAlbum,
+    deleteAllPhotoOfUser
 } = require('./photo.controller');
+
 router 
   .route('/album/:albumId')
     .post(authJwt, uploadSingle, uploadAnPhoto)
 router
-  .route('/:id')
-    .get(authJwt, getAnPhoto) // 3
-    .patch(authJwt, updatePhoto) // 5
-    .delete(authJwt, deletePhoto) // 4
+  .route('/user')
+   .get(authJwt, getAllPhotoOfUser)
+   .delete(authJwt, deleteAllPhotoOfUser)
 router
-  .route('/photo/user/:userId')
-    .get(authJwt, getAllPhotoOfUser) //2
+  .route('/:id')
+    .get(authJwt, getAnPhoto) 
+    .patch(authJwt, updatePhoto) 
+    .delete(authJwt, deletePhoto) 
+
 router
   .route('/photo/album/:albumId')
     .get(authJwt, getAllPhotoOfAlbum) //2

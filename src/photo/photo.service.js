@@ -2,7 +2,7 @@ const db = require('../config/db.connection');
 const Photo = db.photo;
 const User = db.user;
 const Album = db.album;
-const {unlink} = require('fs')
+const { unlink } = require('fs')
 const createOne = async (userId, albumId, name, link) => {
     const [user, album] = await Promise.all([
         User.findByPk(userId),
@@ -25,19 +25,41 @@ const updateOne = async (id, name) => {
 }
 const deleteOne = async (id) => {
     const photo = await getOne(id);
-    // unlink(photo.link, (err) => {
-    //     if (err) throw err;
-    //     console.log(`${photo.name} was deleted!`);
-    //   });
+    unlink(photo.link, (err) => {
+        if (err) throw err;
+        console.log(`${photo.name} was deleted!`);
+    });
     const rs = await photo.destroy();
-    console.log(rs);
     return rs;
 }
 
-
+const getAllByUserId = async (id) => {
+    const photoOfUser = await User.findByPk(id, 
+        {
+        attributes: {exclude: ['password']},
+        include: [
+            {
+                model: Photo,
+                as: "photos",
+                attributes: ["id", "name", "link"],
+            },
+        ],
+    }
+    );
+    console.log(photoOfUser);
+    return photoOfUser.photos;
+}
+const deleteAllPhotoById = async (id) => {
+    const allPhoto = await getAllByUserId(id);
+    for(const photo of allPhoto){
+         await deleteOne(photo.id);
+    }
+}
 module.exports = {
     createOne,
     getOne,
     updateOne,
     deleteOne,
+    getAllByUserId,
+    deleteAllPhotoById
 } 
