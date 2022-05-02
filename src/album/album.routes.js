@@ -7,6 +7,8 @@ const {
   getAllAlbumOfAnUser,
   updateAlbum,
   deleteAlbum,
+  inviteContributor,
+  replyInvitation
 } = require('./album.controller')
 const router = express.Router()
 
@@ -19,5 +21,10 @@ router.route('/:id')
   .get(middleware.authJwt, getAlbumById)
   .patch(middleware.authJwt, updateAlbum)
   .delete(middleware.authJwt, deleteAlbum)
-
+router
+  .route('/invite/:albumId')
+  .post(middleware.authJwt, inviteContributor)
+router
+  .route('/reply/:accessToken')
+  .patch(replyInvitation)
 module.exports = router

@@ -5,7 +5,7 @@ const User = db.user;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { getOneUser, updateUser } = require('../user/user.service');
-const transporter = require('../helper/email')
+const transporter = require('../helper/email');
 
 exports.register = async (req, res, next) => {
   try {

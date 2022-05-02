@@ -1,5 +1,9 @@
 const db = require('../config/db.connection.js');
 const User = db.user;
+
+const getOne = async (id) =>{
+    return await User.findByPk(id);
+}
 const getOneUser = async (filter) => {
     const { email, username } = filter;
     if (email) {
@@ -27,4 +31,4 @@ const updateUser = async (params, id) => {
       );
 }
 
-module.exports = { getOneUser, updateUser };
+module.exports = { getOneUser, updateUser, getOne };

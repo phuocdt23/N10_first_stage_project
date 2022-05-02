@@ -2,11 +2,14 @@ const db = require('../config/db.connection');
 const Album = db.album;
 const User = db.user;
 const { StatusCodes } = require('http-status-codes')
-
+const getOneAlbum = async (id) => {
+  const album = await Album.findByPk(id);
+  return album;
+}
 const addAlbumByUserId = async (userId, albumId) => {
   const user = await User.findByPk(userId);
   const album = await Album.findByPk(albumId);
-  const rs = user.addAlbum(album);
+  const rs = user.addAlbum(album, { through: { role: 'Owner' } });
   return rs;
 }
 const create = async (name, description) => {
@@ -46,11 +49,17 @@ const deleteOne = async (id) => {
   const album = await Album.destroy({ where: id })
   return album
 }
+const inviteContributorService = async (user, album) => {
+  console.log(3);
+  await user.addAlbum(album, { through: { role: 'Contributor', status: 'Inactive' } })
+}
 
 module.exports = {
   create,
   addAlbumByUserId,
   getAllAlbumUserByUserId,
   updateOne,
-  deleteOne
+  deleteOne,
+  getOneAlbum,
+  inviteContributorService
 }
