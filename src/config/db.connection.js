@@ -27,14 +27,16 @@ db.album = require("../album/album.model")(sequelize, Sequelize);
 db.photo = require("../photo/photo.model")(sequelize, Sequelize);
 const album_users = sequelize.define('album_users', {
   role: {
-    type: Sequelize.STRING,
+    type: Sequelize.ENUM,
+    values: ['Owner', 'Contributor'],
+    defaultValue: 'Contributor',
     allowNull: false
   },
   status: {
     type: Sequelize.ENUM,
-    values: ['Active', 'Inactive'],
+    values: ['Active', 'Inactive', 'Rejected'],
     allowNull: false,
-    defaultValue: 'Active'
+    defaultValue: 'Inactive'
   },
 });
 db.user.belongsToMany(db.album, {

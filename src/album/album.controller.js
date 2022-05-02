@@ -9,7 +9,8 @@ const {
   updateOne, 
   deleteOne,
   getOneAlbum,
-  inviteContributorService
+  inviteContributorService,
+  replyInvitationService
 } = require('./album.service');
 const {
   getOne,
@@ -106,12 +107,12 @@ const inviteContributor = async (req, res, next) => {
       html: `<p>${owner.username} invite you to be a contributor album ${album.name}
         <a 
           href=
-            'http://${config.host}:${config.port}/albums/${token}?albumid=${album.id}&&status=Active'
+            'http://${config.host}:${config.port}/album/reply/${token}?albumid=${album.id}&&status=Active'
         >Accept</a>
         || 
         <a 
           href=
-            'http://${config.host}:${config.port}/albums/${token}?albumid=${album.id}&&status=Invalid'
+            'http://${config.host}:${config.port}/album/reply/${token}?albumid=${album.id}&&status=Rejected'
         >Reject</a>
         </p>`
     }
@@ -123,11 +124,30 @@ const inviteContributor = async (req, res, next) => {
     next(error)
   }
 }
-const replyInvitation = async (req, res, next) => {
-  try{
 
-  }catch(err){
-    next(err)
+const replyInvitation = async (req, res, next) => {
+  try {
+    console.log(1);// check whether or not run into controller
+    const { token } = req.params;
+    const { status, albumid: albumId } = req.query;
+    const decode = jwt.verify(token, config.emailSecretKey);
+    const contributorId = decode.id;
+    console.log(2);// decoded successfully?
+
+    const contributor = await getOne(contributorId);
+    if (!contributor) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({message:`Don't have permission`});
+    };
+
+    const rs = await replyInvitationService(contributorId, albumId, status)
+    if(status === 'Rejected'){
+      return res.status(StatusCodes.OK).json({message: "Contributor Rejected!"});
+    }
+    console.log(rs);
+    console.log(4);// check reply successfully!!!!!" 
+    res.status(StatusCodes.OK).json({message:"Contributor Accepted!"});
+  } catch (error) {
+    next(error)
   }
 }
 module.exports = {

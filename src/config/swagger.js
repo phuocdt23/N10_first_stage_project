@@ -1,3 +1,4 @@
+const {post, host} = require('../config/config')
 const swaggerOptions = {
     swaggerDefinition: {
       info: {
@@ -6,7 +7,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://localhost:8080',
+          url: `http://${host}:${post}`,
           description: ''
         }
       ]

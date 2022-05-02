@@ -25,6 +25,6 @@ router
   .route('/invite/:albumId')
   .post(middleware.authJwt, inviteContributor)
 router
-  .route('/reply/:accessToken')
-  .patch(replyInvitation)
+  .route('/reply/:token')
+  .get(replyInvitation)
 module.exports = router
