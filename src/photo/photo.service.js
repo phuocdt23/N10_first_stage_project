@@ -29,7 +29,10 @@ const deleteOne = async (id) => {
         if (err) throw err;
         console.log(`${photo.name} was deleted!`);
     });
-    const rs = await photo.destroy();
+    const rs = await Photo.destroy({
+        where: { id: id }
+       })
+    console.log(rs)
     return rs;
 }
 
@@ -41,7 +44,7 @@ const getAllByUserId = async (id) => {
             {
                 model: Photo,
                 as: "photos",
-                attributes: ["id", "name", "link"],
+                attributes: ["id", "name", "link", "userId", "albumId"],
             },
         ],
     }
@@ -55,11 +58,35 @@ const deleteAllPhotoById = async (id) => {
          await deleteOne(photo.id);
     }
 }
+const getAllPhotoByAlbumId = async (id) => {
+    const photoOfAlbum = await Album.findByPk(id, 
+        {
+        include: [
+            {
+                model: Photo,
+                as: "photos",
+                attributes: ["id", "name", "link", "userId", "albumId"],
+            },
+        ],
+    }
+    );
+    console.log(photoOfAlbum);
+    return photoOfAlbum.photos;
+}
+const deleteAllByAlbumId = async (id) => {
+    const allPhoto = await getAllPhotoByAlbumId(id);
+    for(const photo of allPhoto){
+         await deleteOne(photo.id);
+    }
+}
+
 module.exports = {
     createOne,
     getOne,
     updateOne,
     deleteOne,
     getAllByUserId,
-    deleteAllPhotoById
+    deleteAllPhotoById,
+    getAllPhotoByAlbumId,
+    deleteAllByAlbumId
 } 

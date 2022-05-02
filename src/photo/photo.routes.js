@@ -15,6 +15,8 @@ const {
 router 
   .route('/album/:albumId')
     .post(authJwt, uploadSingle, uploadAnPhoto)
+    .get(authJwt, getAllPhotoOfAlbum) 
+    .delete(authJwt, deleteAllPhotoOfAlbum) 
 router
   .route('/user')
    .get(authJwt, getAllPhotoOfUser)
@@ -25,8 +27,4 @@ router
     .patch(authJwt, updatePhoto) 
     .delete(authJwt, deletePhoto) 
 
-router
-  .route('/photo/album/:albumId')
-    .get(authJwt, getAllPhotoOfAlbum) //2
-    .delete(authJwt, deleteAllPhotoOfAlbum) // 5
   module.exports = router;

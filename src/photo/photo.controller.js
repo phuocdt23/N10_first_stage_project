@@ -5,6 +5,8 @@ const {
     deleteOne,
     getAllByUserId,
     deleteAllPhotoById,
+    getAllPhotoByAlbumId,
+    deleteAllByAlbumId,
 } = require('./photo.service')
 const {StatusCodes} = require('http-status-codes');
 const uploadAnPhoto = async (req, res, next) => {
@@ -72,16 +74,18 @@ const deleteAllPhotoOfUser = async (req, res, next) => {
         next(err);
     }
 }
-const deleteAllPhotoOfAlbum = async (req, res, next) => {
+const getAllPhotoOfAlbum = async (req, res, next) => {
     try{
-
+        const photoOfAlbum = await getAllPhotoByAlbumId(req.params.albumId);
+          return res.status(StatusCodes.OK).json({photoOfAlbum});
     }catch(err){
         next(err);
     }
 }
-const getAllPhotoOfAlbum = async (req, res, next) => {
+const deleteAllPhotoOfAlbum = async (req, res, next) => {
     try{
-
+        await deleteAllByAlbumId(req.params.albumId);
+        return res.status(StatusCodes.OK).json({message: 'Album deleted successfully!'});
     }catch(err){
         next(err);
     }
