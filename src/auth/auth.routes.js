@@ -1,23 +1,107 @@
 const express = require("express");
+const { validate } = require("express-validation");
 const controller = require("./auth.controller");
-const middleware = require("./auth.middleware");
-const router = express.Router();
-router
+const {
+  checkDuplicateUsernameOrEmail,
+  authJwt } = require("./auth.middleware");
+  const router = express.Router();
+  const {
+    registerValidation,
+    loginValidation,
+    changePasswordValidation,
+    updateValidation,
+    forgotPasswordValidation,
+    resetPasswordValidation
+  } = require('./auth.validation');
+  router
   .post('/register',
-    middleware.checkDuplicateUsernameOrEmail,
-    controller.register)
-  .post("/login", controller.login)
+  validate(registerValidation),
+  checkDuplicateUsernameOrEmail,
+  controller.register)
+    /**
+   * @swagger
+   * /auth/register:
+   *   post:
+   *     summary: register an user
+   *     tags:
+   *       - User
+   *     parameters:
+   *      - in: body
+   *        name: body
+   *        required: true
+   *        schema:
+   *          type: object
+   *          properties:
+   *            email:
+   *              type: string
+   *            username:
+   *              type: string
+   *            name:
+   *              type: string
+   *            password:
+   *              type: string
+   *        description: register an user
+   *     responses:
+   *       200:
+   *         description: 
+   *       400:
+   *         description: 
+   *       401:
+   *         description: 
+   */
+  .post("/login", validate(loginValidation), controller.login)
+  /**
+   * @swagger
+   * /auth/login:
+   *   post:
+   *     summary: login by username or email
+   *     tags:
+   *       - User
+   *     parameters:
+   *      - in: body
+   *        name: body
+   *        required: true
+   *        schema:
+   *          type: object
+   *          properties:
+   *            email:
+   *              type: string
+   *            username:
+   *              type: string
+   *            password:
+   *              type: string
+   *        description: login into server, return infor user & access token
+   *     responses:
+   *       200:
+   *         description: log in Successfully.
+   *       400:
+   *         description: Bad Request
+   *       401:
+   *         description: you need to check your email to confirm account before log in!
+   */
   .get("/confirmation/:token", controller.confirmationEmail)
-  .post("/change-password", controller.changePassword)
-  .patch('/update-user', middleware.authJwt, controller.updateUser)
-  .post('/forgot-password', controller.forgotPassword)
-  .post('/reset-password/:token', controller.resetPassword)
-module.exports = router;
+  /**
+ * @swagger
+ * /confirmation/:token:
+ *   get:
+ *     summary: get confirmation
+ *     tags:
+ *       - User
+ *     description: confirm request from email
+ *     responses:
+ *       200:
+ *         description: User registered successfully But you need to check your email to confirm!
+ *       400:
+ *         description: Error:Bad Request
+ *       409:
+ *         description: Failed! Username is already in use!
+ */
+  .post("/change-password", validate(changePasswordValidation), controller.changePassword)
 /**
  * @swagger
- * /auth/register:
+ * /auth/change-password:
  *   post:
- *     summary: Create new user
+ *     summary: change password
  *     tags:
  *       - User
  *     parameters:
@@ -27,20 +111,109 @@ module.exports = router;
  *        schema:
  *          type: object
  *          properties:
- *            username:
- *              type: string
  *            email:
  *              type: string
- *            name:
+ *            username:
  *              type: string
  *            password:
  *              type: string
- *        description: Created user object
+ *            newPassword:
+ *              type: string
+ *        description: change password via email or username
  *     responses:
  *       200:
- *         description: User Added Successfully.
+ *         description: successfully change password!
  *       400:
- *         description: Bad Request
- *       409:
- *         description: Conflict
+ *         description: 
+ *       401:
+ *         description: 
  */
+
+  .patch('/update-user', validate(updateValidation), authJwt, controller.updateUser)
+  /**
+ * @swagger
+ * /auth/update-user:
+ *   patch:
+ *     summary: update information user
+ *     tags:
+ *       - User
+ *     parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *            username:
+ *              type: string
+ *            password:
+ *              type: string
+ *            newPassword:
+ *              type: string
+ *        description: change password via email or username
+ *     responses:
+ *       200:
+ *         description: successfully change password!
+ *       400:
+ *         description: 
+ *       401:
+ *         description: 
+ */
+
+  .post('/forgot-password', validate(forgotPasswordValidation), controller.forgotPassword)
+ /**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: post registered email of that user in order to get reset password link via email 
+ *     tags:
+ *       - User
+ *     parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *              type: string
+ *        description: post registered email of that user in order to get reset password link via email
+ *     responses:
+ *       200:
+ *         description: 
+ *       400:
+ *         description: 
+ *       401:
+ *         description: 
+ */
+
+  .post('/reset-password/:token', validate(resetPasswordValidation), controller.resetPassword)
+ /**
+ * @swagger
+ * /auth/reset-password/:token:
+ *   post:
+ *     summary: post a newPassword to reset user's password
+ *     tags:
+ *       - User
+ *     parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *          properties:
+ *            newPassword:
+ *              type: string
+ *        description: 
+ *     responses:
+ *       200:
+ *         description: 
+ *       400:
+ *         description: 
+ *       401:
+ *         description: 
+ */
+module.exports = router;
+
