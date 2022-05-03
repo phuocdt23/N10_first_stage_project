@@ -39,8 +39,12 @@ const updateOne = async (id, name, description) => {
   const album = await Album.findByPk(id);
   if (!album) return res.status(StatusCodes.NOT_FOUND).json({ message: "invalid id album" });
   else {
-    album.name = name;
-    album.description = description;
+    if(name){
+      album.name = name;
+      }
+    if(description){
+      album.description = description;
+    }
     album.save();
   }
   return album

@@ -24,7 +24,7 @@ const {
    *   post:
    *     summary: register an user
    *     tags:
-   *       - User
+   *       - Auth
    *     parameters:
    *      - in: body
    *        name: body
@@ -56,7 +56,7 @@ const {
    *   post:
    *     summary: login by username or email
    *     tags:
-   *       - User
+   *       - Auth
    *     parameters:
    *      - in: body
    *        name: body
@@ -86,7 +86,7 @@ const {
  *   get:
  *     summary: get confirmation
  *     tags:
- *       - User
+ *       - Auth
  *     description: confirm request from email
  *     responses:
  *       200:
@@ -103,7 +103,7 @@ const {
  *   post:
  *     summary: change password
  *     tags:
- *       - User
+ *       - Auth
  *     parameters:
  *      - in: body
  *        name: body
@@ -136,7 +136,7 @@ const {
  *   patch:
  *     summary: update information user
  *     tags:
- *       - User
+ *       - Auth
  *     parameters:
  *      - in: body
  *        name: body
@@ -169,7 +169,7 @@ const {
  *   post:
  *     summary: post registered email of that user in order to get reset password link via email 
  *     tags:
- *       - User
+ *       - Auth
  *     parameters:
  *      - in: body
  *        name: body
@@ -196,7 +196,7 @@ const {
  *   post:
  *     summary: post a newPassword to reset user's password
  *     tags:
- *       - User
+ *       - Auth
  *     parameters:
  *      - in: body
  *        name: body
