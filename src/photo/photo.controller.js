@@ -36,7 +36,6 @@ const getAnPhoto = async (req, res, next) => {
 const updatePhoto = async (req, res, next) => {
     try{
         const rs = await updateOne(req.params.id, req.body.name);
-        console.log(rs);
         if(rs){
             return res.status(StatusCodes.OK).json({result: rs});
         }else{

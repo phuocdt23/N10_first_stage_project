@@ -84,7 +84,6 @@ const deleteAlbum = async (req, res, next) => {
 }
 const inviteContributor = async (req, res, next) => {
   try {
-    console.log(1);
     const { email } = req.body
     const { albumId } = req.params
     const [owner, contributor, album] = await Promise.all([
@@ -96,10 +95,8 @@ const inviteContributor = async (req, res, next) => {
     if(!contributor || !album){
       return res.status(StatusCodes.NOT_FOUND).json({ message: "Not found album or contributor"});
     }
-    console.log(2);
     await inviteContributorService(contributor, album);
     const token = jwt.sign({id: contributor.id}, config.emailSecretKey);
-    console.log(4);
     const options = {
       from: config.email,
       to: email,
@@ -118,7 +115,6 @@ const inviteContributor = async (req, res, next) => {
     }
 
     const resultSendMail = await transporter.sendMail(options);
-    console.log(resultSendMail);
     res.status(StatusCodes.OK).json({message: "send invitation successfully"})
   } catch (error) {
     next(error)
@@ -127,13 +123,10 @@ const inviteContributor = async (req, res, next) => {
 
 const replyInvitation = async (req, res, next) => {
   try {
-    console.log(1);// check whether or not run into controller
     const { token } = req.params;
     const { status, albumid: albumId } = req.query;
     const decode = jwt.verify(token, config.emailSecretKey);
     const contributorId = decode.id;
-    console.log(2);// decoded successfully?
-
     const contributor = await getOne(contributorId);
     if (!contributor) {
       return res.status(StatusCodes.UNAUTHORIZED).json({message:`Don't have permission`});
@@ -143,8 +136,6 @@ const replyInvitation = async (req, res, next) => {
     if(status === 'Rejected'){
       return res.status(StatusCodes.OK).json({message: "Contributor Rejected!"});
     }
-    console.log(rs);
-    console.log(4);// check reply successfully!!!!!" 
     res.status(StatusCodes.OK).json({message:"Contributor Accepted!"});
   } catch (error) {
     next(error)

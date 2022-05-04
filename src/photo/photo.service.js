@@ -32,7 +32,6 @@ const deleteOne = async (id) => {
     const rs = await Photo.destroy({
         where: { id: id }
        })
-    console.log(rs)
     return rs;
 }
 
@@ -49,7 +48,6 @@ const getAllByUserId = async (id) => {
         ],
     }
     );
-    console.log(photoOfUser);
     return photoOfUser.photos;
 }
 const deleteAllPhotoById = async (id) => {
@@ -70,7 +68,6 @@ const getAllPhotoByAlbumId = async (id) => {
         ],
     }
     );
-    console.log(photoOfAlbum);
     return photoOfAlbum.photos;
 }
 const deleteAllByAlbumId = async (id) => {

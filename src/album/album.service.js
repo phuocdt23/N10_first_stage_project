@@ -15,7 +15,6 @@ const addAlbumByUserId = async (userId, albumId) => {
 }
 const create = async (name, description) => {
   const album = await Album.create({ name, description })
-  console.log(album);
   return album;
 }
 const getAllAlbumUserByUserId = async (userId) => {
@@ -55,7 +54,6 @@ const deleteOne = async (id) => {
   return album
 }
 const inviteContributorService = async (user, album) => {
-  console.log(3);
   await user.addAlbum(album);
 }
 const replyInvitationService = async (contributorId, albumId, status) => {
@@ -63,7 +61,6 @@ const replyInvitationService = async (contributorId, albumId, status) => {
     User.findByPk(contributorId),
     Album.findByPk(albumId)
   ])
-  console.log(3);
   return await user.addAlbum(album, { through: { status }})
   //check whether or not run into service
   // const rs = await AlbumUser.update({ status }, { where: { albumId, userId } })
