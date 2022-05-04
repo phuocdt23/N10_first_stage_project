@@ -5,6 +5,8 @@ const sequelize = new Sequelize(
   config.userDB,
   config.passwordDB,
   {
+    // disable logging; default: console.log
+    logging: false,
     host: config.host,
     dialect: config.dialectDB,
     operatorsAliases: false,

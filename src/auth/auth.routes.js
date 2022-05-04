@@ -26,6 +26,7 @@ const {
    *     tags:
    *       - Auth
    *     parameters:
+   * 
    *      - in: body
    *        name: body
    *        required: true
@@ -82,19 +83,20 @@ const {
   .get("/confirmation/:token", controller.confirmationEmail)
   /**
  * @swagger
- * /confirmation/:token:
+ * /auth/confirmation/{token}:
  *   get:
  *     summary: get confirmation
  *     tags:
  *       - Auth
+ *     parameters:
+ *      - in: path
+ *        name: token 
  *     description: confirm request from email
  *     responses:
  *       200:
- *         description: User registered successfully But you need to check your email to confirm!
+ *         description: confirmation successfully!!!!!
  *       400:
  *         description: Error:Bad Request
- *       409:
- *         description: Failed! Username is already in use!
  */
   .post("/change-password", validate(changePasswordValidation), controller.changePassword)
 /**
@@ -121,12 +123,12 @@ const {
  *              type: string
  *        description: change password via email or username
  *     responses:
- *       200:
+ *       200: 
  *         description: successfully change password!
- *       400:
- *         description: 
- *       401:
- *         description: 
+ *       406:
+ *         description: Invalid Password!
+ *       404:
+ *         description: User Not found
  */
 
   .patch('/update-user', validate(updateValidation), authJwt, controller.updateUser)
@@ -138,6 +140,8 @@ const {
  *     tags:
  *       - Auth
  *     parameters:
+ *      - in: header
+ *        name: x-access-token
  *      - in: body
  *        name: body
  *        required: true

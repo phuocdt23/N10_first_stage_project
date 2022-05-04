@@ -100,6 +100,8 @@ router.route('/:id')
    *     tags:
    *       - Album
    *     parameters:
+   *      - in: header
+   *        name: x-access-token
    *      - in: body
    *        name: body
    *        required: true
@@ -128,6 +130,8 @@ router
    *     tags:
    *       - Album
    *     parameters:
+   *      - in: header
+   *        name: x-access-token
    *      - in: body
    *        name: body
    *        required: true

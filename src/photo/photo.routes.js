@@ -17,7 +17,7 @@ router
     .post(authJwt, uploadSingle, uploadAnPhoto)
   /**
    * @swagger
-   * /photo/album/:albumId:
+   * /photo/album/{:albumId}:
    *   post:
    *     summary: upload an photo
    *     tags:
@@ -33,7 +33,7 @@ router
     .get(authJwt, getAllPhotoOfAlbum)
   /**
    * @swagger
-   * /photo/album/:albumId:
+   * /photo/album/{:albumId}:
    *   get:
    *     summary: get info of all photo of an album
    *     tags:
@@ -48,7 +48,7 @@ router
     .delete(authJwt, deleteAllPhotoOfAlbum) 
   /**
    * @swagger
-   * /photo/album/:albumId:
+   * /photo/album/{:albumId}:
    *   delete:
    *     summary: delete all photo of an album
    *     tags:
@@ -97,7 +97,7 @@ router
     .get(authJwt, getAnPhoto) 
   /**
    * @swagger
-   * /photo/:id:
+   * /photo/{:id}:
    *   get:
    *     summary: get info an photo
    *     tags:
@@ -114,7 +114,7 @@ router
     .patch(authJwt, updatePhoto) 
   /**
    * @swagger
-   * /photo/:id:
+   * /photo/{:id}:
    *   patch:
    *     summary: update name of photo
    *     tags:
@@ -129,7 +129,7 @@ router
     .delete(authJwt, deletePhoto) 
   /**
    * @swagger
-   * /photo/:id:
+   * /photo/{:id}:
    *   delete:
    *     summary: delete an photo of an photo
    *     tags:

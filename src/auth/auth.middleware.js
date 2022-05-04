@@ -7,7 +7,7 @@ const User = db.user;
 const checkDuplicateUsernameOrEmail = (req, res, next) => {
   try {
     if(!req.body.username || !req.body.email){
-      return res.status(StatusCodes.BAD_REQUEST).json({message: "BAD REQUEST"})
+      return res.status(StatusCodes.BAD_REQUEST).json({message: "Does not have a username or email or either"})
     }
     // Username
     User.findOne({

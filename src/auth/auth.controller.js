@@ -28,19 +28,18 @@ exports.register = async (req, res, next) => {
             to: user.email,
             subject: `Confirm Email`,
             html: `Please check this email to confirm your email <a href="${url}">${url}</a>`,
-          },
-          (err, info) => {
-            if (err) {
-              res.json(err);
-            } else {
-              res.json(info);
-            }
           })
-        res.status(StatusCodes.CREATED).send({ message: "User registered successfully But you need to check your email to confirm!" });
-
+        res
+          .status(StatusCodes.CREATED)
+          .json(
+            {
+              message: "You need to check your email to confirm your account!",
+              token: token
+            }
+          );
       })
       .catch(err => {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ message: err.message });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: `Something went wrong! \n ${err.message}` });
       });
   } catch (err) {
     next(err);
@@ -108,9 +107,9 @@ exports.updateUser = async (req, res, next) => {
     const { email, username, name } = req.body;
     const user = User.findByPk(req.userId);
     if (user) {
-      const result = await updateUser({email, username, name}, req.userId);
+      const result = await updateUser({ email, username, name }, req.userId);
       console.log(result);
-      res.status(StatusCodes.OK).json({message: "Email, username, name successfully updated!!"});
+      res.status(StatusCodes.OK).json({ message: "Email, username, name successfully updated!!" });
     } else {
       res.status(StatusCodes.CONFLICT).json({ message: "Username or email already in use!!!!!" })
     }
@@ -137,8 +136,6 @@ exports.changePassword = async (req, res, next) => {
       });
     }
     const rs = await user.update({ password: bcrypt.hashSync(newPassword, 8) });
-    console.log("-------------------------------------");
-    console.log(rs);
     res.status(StatusCodes.OK).json({ message: 'successfully change password!' });
   } catch (err) {
     next(err);
