@@ -2228,11 +2228,6 @@
   dependencies:
     "wrappy" "1"
 
-"openapi-types@>=7":
-  "integrity" "sha512-GB+QO6o1hAtKsb8tP3/FTD5jpkdKrf42L4Gel9UySngMurzr+Q9pO+dtnmySQCzoCEfJr39IH6bveEn71xNcVg=="
-  "resolved" "https://registry.npmjs.org/openapi-types/-/openapi-types-11.0.0.tgz"
-  "version" "11.0.0"
-
 "p-cancelable@^1.0.0":
   "integrity" "sha512-s73XxOZ4zpt1edZYZzvhqFa6uvQc1vwUa0K0BdtIZgQMAJj9IbebH+JkgKZc9h+B05PKHLOTl4ajG1BmNrVZlw=="
   "resolved" "https://registry.npmjs.org/p-cancelable/-/p-cancelable-1.1.0.tgz"

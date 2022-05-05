@@ -1,7 +1,7 @@
-const STATUS = {
-  PUBLIC: 'public',
-  PRIVATE: 'private',
-}
+// const STATUS = {
+//   PUBLIC: 'public',
+//   PRIVATE: 'private',
+// }
 module.exports = (sequelize, Sequelize) => {
   const Album = sequelize.define("album", {
     id: {
@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     status:{
       type: Sequelize.ENUM,
-      values: Object.values(STATUS),
+      values: ['Public', 'Private'],
       allowNull: true,
       defaultValue: 'Public'
     }
