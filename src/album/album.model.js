@@ -1,4 +1,4 @@
-// const STATUS = {
+  // const STATUS = {
 //   PUBLIC: 'public',
 //   PRIVATE: 'private',
 // }

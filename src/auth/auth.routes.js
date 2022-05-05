@@ -43,12 +43,12 @@ const {
    *              type: string
    *        description: register an user
    *     responses:
-   *       200:
-   *         description: 
+   *       201:
+   *         description: You need to check your email to confirm your account!
    *       400:
-   *         description: 
-   *       401:
-   *         description: 
+   *         description:  Bad Request
+   *       409:
+   *         description: Failed! Username is already in use!
    */
   .post("/login", validate(loginValidation), controller.login)
   /**
@@ -74,27 +74,27 @@ const {
    *        description: login into server, return infor user & access token
    *     responses:
    *       200:
-   *         description: log in Successfully.
+   *         description: Log in Successfully.
    *       400:
    *         description: Bad Request
    *       401:
-   *         description: you need to check your email to confirm account before log in!
+   *         description: You need to check your email to confirm account before log in!
    */
   .get("/confirmation/:token", controller.confirmationEmail)
   /**
  * @swagger
  * /auth/confirmation/{token}:
  *   get:
- *     summary: get confirmation
+ *     summary: Get confirmation
  *     tags:
  *       - Auth
  *     parameters:
  *      - in: path
  *        name: token 
- *     description: confirm request from email
+ *     description: Confirm request from email
  *     responses:
  *       200:
- *         description: confirmation successfully!!!!!
+ *         description: Confirmation successfully!!!!!
  *       400:
  *         description: Error:Bad Request
  */
@@ -124,7 +124,7 @@ const {
  *        description: change password via email or username
  *     responses:
  *       200: 
- *         description: successfully change password!
+ *         description: Successfully change password!
  *       406:
  *         description: Invalid Password!
  *       404:
@@ -159,10 +159,10 @@ const {
  *        description: change password via email or username
  *     responses:
  *       200:
- *         description: successfully change password!
+ *         description: Successfully change password!
  *       400:
  *         description: 
- *       401:
+ *       401: 
  *         description: 
  */
 
@@ -195,12 +195,14 @@ const {
   .post('/reset-password/:token', validate(resetPasswordValidation), controller.resetPassword)
  /**
  * @swagger
- * /auth/reset-password/:token:
+ * /auth/reset-password/{token}:
  *   post:
  *     summary: post a newPassword to reset user's password
  *     tags:
  *       - Auth
  *     parameters:
+ *      - in: path
+ *        name: token 
  *      - in: body
  *        name: body
  *        required: true
