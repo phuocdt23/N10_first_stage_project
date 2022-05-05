@@ -108,7 +108,6 @@ exports.updateUser = async (req, res, next) => {
     const user = User.findByPk(req.userId);
     if (user) {
       const result = await updateUser({ email, username, name }, req.userId);
-      console.log(result);
       res.status(StatusCodes.OK).json({ message: "Email, username, name successfully updated!!" });
     } else {
       res.status(StatusCodes.CONFLICT).json({ message: "Username or email already in use!!!!!" })
