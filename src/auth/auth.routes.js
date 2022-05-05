@@ -167,7 +167,7 @@ const {
  */
 
   .post('/forgot-password', validate(forgotPasswordValidation), controller.forgotPassword)
- /**
+/**
  * @swagger
  * /auth/forgot-password:
  *   post:
@@ -183,14 +183,13 @@ const {
  *          properties:
  *            email:
  *              type: string
+ *              required: true
  *        description: post registered email of that user in order to get reset password link via email
  *     responses:
  *       200:
- *         description: 
+ *         description: please check your email to reset your password
  *       400:
- *         description: 
- *       401:
- *         description: 
+ *         description: something went wrong
  */
 
   .post('/reset-password/:token', validate(resetPasswordValidation), controller.resetPassword)

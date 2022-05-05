@@ -105,6 +105,25 @@ describe('test auth route /auth',() => {
                 });
         });
     });
+    describe('forget password !', () => {
+        it('POST /auth/forgot-password', done => {
+            chai
+                .request(app)
+                .post('/auth/forgot-password')
+                .send(
+                    {
+                        email: dataTest.registerSuccess.email
+                    }
+                )
+                .end((err, res) => {
+                    forgotPasswordToken = res.body.token;
+                    console.log(forgotPasswordToken);
+                    res.should.have.status(StatusCodes.OK);
+                    res.body.should.have.property('message').eql('please check your email to reset your password');
+                    done();
+                });
+        });
+    });
 })
 
 
